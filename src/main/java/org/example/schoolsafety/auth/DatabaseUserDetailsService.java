@@ -23,6 +23,9 @@ public class DatabaseUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email " + username));
 
+        Long schoolId = user.getSchool() != null ? user.getSchool().getId() : null;
+        String schoolName = user.getSchool() != null ? user.getSchool().getName() : null;
+
         return new AuthenticatedUser(
                 user.getId(),
                 user.getEmail(),
@@ -30,7 +33,9 @@ public class DatabaseUserDetailsService implements UserDetailsService {
                 user.isActive(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole().getName()
+                user.getRole().getName(),
+                schoolId,
+                schoolName
         );
     }
 }

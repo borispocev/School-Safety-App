@@ -5,6 +5,8 @@ public record AuthUserResponse(
         String email,
         String firstName,
         String lastName,
-        String role
+        String role,
+        Long schoolId,
+        String schoolName
 ) {
 }

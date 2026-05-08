@@ -1,5 +1,6 @@
 package org.example.schoolsafety.user.service;
 
+import org.example.schoolsafety.auth.RegisterRequest;
 import org.example.schoolsafety.common.exception.ConflictException;
 import org.example.schoolsafety.common.exception.ResourceNotFoundException;
 import org.example.schoolsafety.role.entity.Role;
@@ -46,6 +47,36 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
         return toResponse(getUserEntity(id));
+    }
+
+    public UserResponse register(RegisterRequest request) {
+        userRepository.findByEmail(request.email()).ifPresent(u -> {
+            throw new ConflictException("A user with email " + request.email() + " already exists");
+        });
+
+        Role userRole = roleRepository.findByName("USER")
+                .orElseGet(() -> roleRepository.findAll().stream()
+                        .filter(r -> !r.getName().equalsIgnoreCase("ADMIN"))
+                        .findFirst()
+                        .orElseThrow(() -> new ResourceNotFoundException("No USER role found")));
+
+        User user = new User();
+        user.setSchool(null);
+        user.setRole(userRole);
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        user.setActive(true);
+
+        return toResponse(userRepository.save(user));
+    }
+
+    public void assignSchool(Long userId, Long schoolId) {
+        User user = getUserEntity(userId);
+        School school = schoolService.getSchoolEntity(schoolId);
+        user.setSchool(school);
+        userRepository.save(user);
     }
 
     public UserResponse createUser(UserRequest request) {
@@ -109,10 +140,12 @@ public class UserService {
     }
 
     private UserResponse toResponse(User user) {
+        Long schoolId = user.getSchool() != null ? user.getSchool().getId() : null;
+        String schoolName = user.getSchool() != null ? user.getSchool().getName() : null;
         return new UserResponse(
                 user.getId(),
-                user.getSchool().getId(),
-                user.getSchool().getName(),
+                schoolId,
+                schoolName,
                 user.getRole().getId(),
                 user.getRole().getName(),
                 user.getFirstName(),

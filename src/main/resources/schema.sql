@@ -48,7 +48,7 @@ CREATE TABLE report_types (
 
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    school_id BIGINT NOT NULL,
+    school_id BIGINT NULL,
     role_id BIGINT NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
