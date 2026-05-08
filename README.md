@@ -1,61 +1,92 @@
-# SchoolSafety Backend
+# SchoolSafety App
 
-Spring Boot backend for the SchoolSafety application. This repository currently provides the backend API, MySQL persistence, and HTTP Basic authentication with `ADMIN` and `USER` roles.
+A web application for reporting unsafe situations near schools. Students and community members can submit reports about traffic hazards, unsafe crosswalks, missing signage, poor lighting, and other safety concerns near Skopje secondary schools.
 
-## Requirements
+## Tech Stack
 
-- Java 21
+**Backend:** Java 21 · Spring Boot · Spring Security (HTTP Basic) · Spring Data JPA · MySQL  
+**Frontend:** React 18 · Vite · Tailwind CSS · React Router v6 · Axios
+
+## Prerequisites
+
+- Java 21+
+- Node.js 18+
 - MySQL 8+
-- Maven Wrapper (`mvnw.cmd` is included)
 
-## Local setup
+## Setup
 
-1. Create a MySQL database named `school_safety`.
-2. Set database credentials in your shell before starting the app.
+### 1. Database
 
-PowerShell:
+Create the database:
+
+```sql
+CREATE DATABASE school_safety;
+```
+
+### 2. Run the backend
+
+Credentials are read from environment variables:
 
 ```powershell
-$env:DB_USERNAME="your_mysql_user"
-$env:DB_PASSWORD="your_mysql_password"
-.\mvnw.cmd spring-boot:run
+# PowerShell
+$env:DB_PASSWORD="your_mysql_password"; .\mvnw spring-boot:run
 ```
 
-The app connects to:
-
-```text
-jdbc:mysql://localhost:3306/school_safety
+```bash
+# bash / Git Bash
+DB_PASSWORD=your_mysql_password ./mvnw spring-boot:run
 ```
 
-## Seeded local login
+`DB_USERNAME` defaults to `root`. Override it the same way if needed.
 
-On startup, the app seeds a default admin account for local development if it does not already exist.
+On first startup, Hibernate auto-creates the schema and `data.sql` seeds default roles, report types, statuses, and all 23 Skopje secondary schools.
 
-- Email: `admin@schoolsafety.local`
-- Password: `Admin123!`
-- Role: `ADMIN`
+The API is available at `http://localhost:8080`.
 
-## Authentication
+### 3. Run the frontend
 
-- Auth type: HTTP Basic
-- Username: user email
-- Password: plaintext password matched against the BCrypt hash stored in `users.password_hash`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Use `/api/auth/me` to verify the authenticated user from the frontend.
+The app is available at `http://localhost:5174`. The Vite dev server proxies all `/api` requests to the backend automatically.
 
-## Role access
+## Default accounts
 
-- `ADMIN`: full access to management endpoints
-- `USER`: authenticated access to report and metadata endpoints
+Seed data creates one admin account for local development:
 
-Current URL rules:
+| Email | Password | Role |
+|---|---|---|
+| `admin@schoolsafety.local` | `Admin123!` | ADMIN |
 
-- Admin only: `/api/users/**`, `/api/schools/**`, `/api/roles/**`
-- Authenticated `USER` or `ADMIN`: `/api/reports/**`, `/api/reports/*/images/**`, `/api/report-metadata/**`, `/api/auth/me`
+New accounts registered via the signup page receive the `USER` role and can later link themselves to a school from their profile.
 
-## Database initialization
+## Features
 
-- `schema.sql` creates the schema
-- `data.sql` seeds roles, report metadata, and the local admin user
-- startup is configured to continue if schema objects already exist, which makes repeated local restarts easier
+- **Public:** homepage, register account, view schools
+- **User:** submit safety reports, apply as student (link account to a school), view reports
+- **Admin:** manage users, schools, and reports; update report statuses
 
+## Project structure
+
+```
+SchoolSafety/
+├── src/main/java/org/example/schoolsafety/
+│   ├── auth/          # Registration, login, apply-student endpoints
+│   ├── config/        # Spring Security configuration
+│   ├── report/        # Report entity, service, controller
+│   ├── school/        # School entity, service, controller
+│   └── user/          # User entity, service, controller
+├── src/main/resources/
+│   ├── application.properties   # Config (credentials via env vars)
+│   ├── schema.sql               # DDL — runs on fresh database
+│   └── data.sql                 # Seed data — idempotent, safe to re-run
+└── frontend/                    # React + Vite frontend
+    └── src/
+        ├── api/           # Axios API clients
+        ├── components/    # Navbar, Footer, ProtectedRoute
+        ├── context/       # AuthContext (login state)
+        └── pages/         # Page components (login, signup, reports, admin)
+```
