@@ -17,6 +17,8 @@ public record ReportRequest(
         boolean anonymousReport,
         LocalDateTime incidentAt,
         @NotNull LocalDateTime submittedAt,
-        LocalDateTime resolvedAt
+        LocalDateTime resolvedAt,
+        Double latitude,
+        Double longitude
 ) {
 }

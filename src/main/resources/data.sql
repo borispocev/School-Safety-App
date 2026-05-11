@@ -128,3 +128,135 @@ WHERE NOT EXISTS (SELECT 1 FROM schools WHERE name = 'СОУ Сарај');
 INSERT INTO schools (name, address_line_1, city, country, created_at, updated_at)
 SELECT 'СОУ Шаип Јусуф', 'ул. Вашингтонска бр. 44', 'Скопје', 'Македонија', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 WHERE NOT EXISTS (SELECT 1 FROM schools WHERE name = 'СОУ Шаип Јусуф');
+
+UPDATE schools
+SET latitude = 41.9116266,
+    longitude = 20.8733358
+WHERE id=1;
+
+UPDATE schools
+SET latitude = 41.9927878,
+    longitude = 21.4314772
+WHERE id=2;
+
+UPDATE schools
+SET latitude = 41.5126184,
+    longitude = 20.7178471
+WHERE id=3;
+
+UPDATE schools
+SET latitude = 42.0027086,
+    longitude = 21.4767952
+WHERE id=4;
+
+UPDATE schools
+SET latitude = 42.0026913,
+    longitude = 21.472218
+WHERE id=5;
+
+UPDATE schools
+SET latitude = 42.0061634,
+    longitude = 21.4098225
+WHERE id=6;
+
+UPDATE schools
+SET latitude = 42.0041753,
+    longitude = 21.2450745
+WHERE id=7;
+
+UPDATE schools
+SET latitude = 42.0064161,
+    longitude = 21.4621769
+WHERE id=8;
+
+UPDATE schools
+SET latitude = 42.0001248,
+    longitude = 21.3985811
+WHERE id=9;
+
+UPDATE schools
+SET latitude = 42.0001248,
+    longitude = 21.3985811
+WHERE id=10;
+
+UPDATE schools
+SET latitude = 41.9797045,
+    longitude = 21.4366144
+WHERE id=11;
+
+UPDATE schools
+SET latitude = 41.9784872,
+    longitude = 21.4614165
+WHERE id=12;
+
+UPDATE schools
+SET latitude = 41.9779872,
+    longitude = 21.4587366
+WHERE id=13;
+
+UPDATE schools
+SET latitude = 41.9853967,
+    longitude = 20.2924592
+WHERE id=14;
+
+UPDATE schools
+SET latitude = 41.9355335,
+    longitude = 21.2343928
+WHERE id=15;
+
+UPDATE schools
+SET latitude = 42.0013731,
+    longitude = 21.3996942
+WHERE id=16;
+
+UPDATE schools
+SET latitude = 42.0226668,
+    longitude = 21.4409704
+WHERE id=17;
+
+UPDATE schools
+SET latitude = 41.9933576,
+    longitude = 21.3973977
+WHERE id=18;
+
+UPDATE schools
+SET latitude = 42.0021532,
+    longitude = 21.4707848
+WHERE id=19;
+
+UPDATE schools
+SET latitude = 42.0135914,
+    longitude = 21.4348858
+WHERE id=20;
+
+UPDATE schools
+SET latitude = 41.9905865,
+    longitude = 21.4202083
+WHERE id=21;
+
+UPDATE schools
+SET latitude = 42.0242998,
+    longitude = 21.4321747
+WHERE id=22;
+
+UPDATE schools
+SET latitude = 42.0035666,
+    longitude = 21.3257014
+WHERE id=23;
+
+UPDATE schools
+SET latitude = 42.0390406,
+    longitude = 21.42476
+WHERE id=24;
+
+UPDATE reports r
+    JOIN schools s ON r.school_id = s.id
+    SET r.latitude = s.latitude,
+        r.longitude = s.longitude
+WHERE (r.latitude IS NULL OR r.longitude IS NULL)
+  AND s.latitude IS NOT NULL
+  AND s.longitude IS NOT NULL;
+
+
+
+

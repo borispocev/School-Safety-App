@@ -25,6 +25,8 @@ public record ReportResponse(
         String aiSuggestedTypeName,
         Double aiConfidenceScore,
         String aiSuggestedPriority,
-        String aiRiskKeywords
+        String aiRiskKeywords,
+        Double latitude,
+        Double longitude
 ) {
 }

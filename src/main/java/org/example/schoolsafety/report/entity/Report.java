@@ -75,6 +75,12 @@ public class Report extends AuditableEntity {
     @Column(name = "ai_risk_keywords", length = 1000)
     private String aiRiskKeywords;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     public Long getId() {
         return id;
     }
@@ -208,5 +214,20 @@ public class Report extends AuditableEntity {
 
     public void setAiRiskKeywords(String aiRiskKeywords) {
         this.aiRiskKeywords = aiRiskKeywords;
+    }
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

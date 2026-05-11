@@ -10,6 +10,8 @@ public record SchoolResponse(
         String postalCode,
         String country,
         String phoneNumber,
-        String email
+        String email,
+        Double latitude,
+        Double longitude
 ) {
 }

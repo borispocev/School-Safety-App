@@ -77,7 +77,9 @@ public class SchoolService {
                 school.getPostalCode(),
                 school.getCountry(),
                 school.getPhoneNumber(),
-                school.getEmail()
+                school.getEmail(),
+                school.getLatitude(),
+                school.getLongitude()
         );
     }
 }

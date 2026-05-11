@@ -49,6 +49,12 @@ export default function Navbar() {
                 {isAdmin() && (
                   <Link to="/admin" className={isActive('/admin')}>Администрација</Link>
                 )}
+                <Link
+                    to="/map"
+                    className="text-white hover:text-blue-100 font-medium"
+                >
+                  Мапа на училишта / Map
+                </Link>
               </div>
             )}
           </div>

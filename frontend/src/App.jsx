@@ -15,6 +15,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import ManageReports from './pages/admin/ManageReports'
 import ManageSchools from './pages/admin/ManageSchools'
 import ManageUsers from './pages/admin/ManageUsers'
+import MapPage from './pages/MapPage'
 
 function Layout({ children }) {
   return (
@@ -92,6 +93,11 @@ export default function App() {
             <AdminRoute>
               <Layout><ReportStatisticsPage /></Layout>
             </AdminRoute>
+          } />
+          <Route path="/map" element={
+            <ProtectedRoute>
+              <Layout><MapPage /></Layout>
+            </ProtectedRoute>
           } />
 
           <Route path="*" element={<Navigate to="/" replace />} />

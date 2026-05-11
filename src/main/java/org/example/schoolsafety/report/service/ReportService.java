@@ -122,6 +122,8 @@ public class ReportService {
         report.setIncidentAt(request.incidentAt());
         report.setSubmittedAt(request.submittedAt());
         report.setResolvedAt(request.resolvedAt());
+        report.setLatitude(request.latitude() != null ? request.latitude() : school.getLatitude());
+        report.setLongitude(request.longitude() != null ? request.longitude() : school.getLongitude());
     }
 
     private void applyMlClassification(Report report, ReportRequest request) {
@@ -188,7 +190,9 @@ public class ReportService {
                 report.getAiSuggestedTypeName(),
                 report.getAiConfidenceScore(),
                 report.getAiSuggestedPriority(),
-                report.getAiRiskKeywords()
+                report.getAiRiskKeywords(),
+                report.getLatitude(),
+                report.getLongitude()
         );
     }
 
