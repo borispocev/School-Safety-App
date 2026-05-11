@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.example.schoolsafety.report.dto.ReportStatisticsResponse;
 import java.util.List;
 
 @RestController
@@ -52,5 +54,18 @@ public class ReportController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable Long id) {
         reportService.deleteReport(id);
+    }
+
+    @GetMapping("/export/csv")
+    public void exportReportsToCsv(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"school_safety_reports.csv\"");
+
+        reportService.exportReportsToCsv(response.getWriter());
+    }
+    @GetMapping("/statistics")
+    public ReportStatisticsResponse getReportStatistics() {
+        return reportService.getReportStatistics();
     }
 }

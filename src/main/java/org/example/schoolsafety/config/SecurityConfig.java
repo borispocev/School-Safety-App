@@ -23,6 +23,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/roles/**", "/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/schools/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/reports/export/csv").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/reports/statistics").hasRole("ADMIN")
                         .requestMatchers("/api/reports/*/images/**", "/api/report-metadata/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/reports/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/reports/**").hasAnyRole("USER", "ADMIN")

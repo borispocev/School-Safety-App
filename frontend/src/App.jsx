@@ -3,7 +3,7 @@ import { AuthProvider } from './context/AuthContext'
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-
+import ReportStatisticsPage from './pages/ReportStatisticsPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
@@ -85,6 +85,12 @@ export default function App() {
           <Route path="/admin/users" element={
             <AdminRoute>
               <Layout><ManageUsers /></Layout>
+            </AdminRoute>
+          } />
+
+          <Route path="/admin/statistics" element={
+            <AdminRoute>
+              <Layout><ReportStatisticsPage /></Layout>
             </AdminRoute>
           } />
 

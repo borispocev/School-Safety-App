@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { getReports } from '../api/reports'
 import { getReportTypes, getReportStatuses } from '../api/metadata'
 import { getSchools } from '../api/schools'
+import { exportReportsCsv } from '../api/reports'
+import { useAuth } from '../context/AuthContext'
 
 function StatusBadge({ status }) {
   const map = {
@@ -20,6 +22,7 @@ function StatusBadge({ status }) {
 }
 
 export default function ReportsPage() {
+  const { isAdmin } = useAuth()
   const [reports, setReports] = useState([])
   const [filtered, setFiltered] = useState([])
   const [types, setTypes] = useState([])
@@ -68,6 +71,14 @@ export default function ReportsPage() {
     setStatusFilter('')
     setSchoolFilter('')
   }
+  const handleExportCsv = async () => {
+    try {
+      await exportReportsCsv()
+    } catch (error) {
+      console.error(error)
+      alert('Грешка при export на пријавите.')
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -76,12 +87,32 @@ export default function ReportsPage() {
           <h1 className="text-2xl font-bold text-gray-800">Пријави / Reports</h1>
           <p className="text-gray-500 text-sm mt-1">{filtered.length} пронајдени пријави</p>
         </div>
-        <Link
-          to="/reports/new"
-          className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors"
-        >
-          + Нова Пријава
-        </Link>
+        <div className="flex items-center gap-3">
+          {isAdmin() && (
+              <button
+                  type="button"
+                  onClick={handleExportCsv}
+                  className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors"
+              >
+                ⬇ Export CSV
+              </button>
+          )}
+
+          <Link
+              to="/reports/new"
+              className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors"
+          >
+            + Нова Пријава
+          </Link>
+          {isAdmin() && (
+              <Link
+                  to="/admin/statistics"
+                  className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors"
+              >
+                📊 Statistics
+              </Link>
+          )}
+        </div>
       </div>
 
       {/* Filters */}

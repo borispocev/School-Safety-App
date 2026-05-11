@@ -20,7 +20,10 @@ import org.example.schoolsafety.user.entity.User;
 import org.example.schoolsafety.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.io.PrintWriter;
+import java.time.format.DateTimeFormatter;
+import org.example.schoolsafety.report.dto.ReportStatisticItem;
+import org.example.schoolsafety.report.dto.ReportStatisticsResponse;
 import java.util.List;
 
 @Service
@@ -199,5 +202,89 @@ public class ReportService {
                 reportImage.getFileSize(),
                 reportImage.getUploadedAt()
         );
+    }
+    @Transactional(readOnly = true)
+    public void exportReportsToCsv(PrintWriter writer) {
+        List<Report> reports = reportRepository.findAllByOrderBySubmittedAtDesc();
+
+        writer.println(String.join(",",
+                "ID",
+                "Title",
+                "Description",
+                "School",
+                "Location",
+                "User Selected Type",
+                "Status",
+                "Reporter",
+                "Anonymous",
+                "Incident At",
+                "Submitted At",
+                "Resolved At",
+                "AI Suggested Type",
+                "AI Confidence Score",
+                "AI Suggested Priority",
+                "AI Risk Keywords"
+        ));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        for (Report report : reports) {
+            String reporterName = report.getReporterUser() == null || report.isAnonymousReport()
+                    ? ""
+                    : report.getReporterUser().getFirstName() + " " + report.getReporterUser().getLastName();
+
+            writer.println(String.join(",",
+                    csvValue(report.getId()),
+                    csvValue(report.getTitle()),
+                    csvValue(report.getDescription()),
+                    csvValue(report.getSchool() != null ? report.getSchool().getName() : null),
+                    csvValue(report.getLocationDetails()),
+                    csvValue(report.getReportType() != null ? report.getReportType().getName() : null),
+                    csvValue(report.getReportStatus() != null ? report.getReportStatus().getName() : null),
+                    csvValue(reporterName),
+                    csvValue(report.isAnonymousReport()),
+                    csvValue(report.getIncidentAt() != null ? report.getIncidentAt().format(formatter) : null),
+                    csvValue(report.getSubmittedAt() != null ? report.getSubmittedAt().format(formatter) : null),
+                    csvValue(report.getResolvedAt() != null ? report.getResolvedAt().format(formatter) : null),
+                    csvValue(report.getAiSuggestedTypeName()),
+                    csvValue(report.getAiConfidenceScore()),
+                    csvValue(report.getAiSuggestedPriority()),
+                    csvValue(report.getAiRiskKeywords())
+            ));
+        }
+
+        writer.flush();
+    }
+    private String csvValue(Object value) {
+        if (value == null) {
+            return "\"\"";
+        }
+
+        String text = value.toString()
+                .replace("\"", "\"\"")
+                .replace("\n", " ")
+                .replace("\r", " ");
+
+        return "\"" + text + "\"";
+    }
+    @Transactional(readOnly = true)
+    public ReportStatisticsResponse getReportStatistics() {
+        Long totalReports = reportRepository.count();
+
+        return new ReportStatisticsResponse(
+                totalReports,
+                mapStatistics(reportRepository.countReportsByType()),
+                mapStatistics(reportRepository.countReportsByStatus()),
+                mapStatistics(reportRepository.countReportsBySchool())
+        );
+    }
+
+    private List<ReportStatisticItem> mapStatistics(List<Object[]> rows) {
+        return rows.stream()
+                .map(row -> new ReportStatisticItem(
+                        row[0] != null ? row[0].toString() : "Unknown",
+                        row[1] != null ? ((Number) row[1]).longValue() : 0L
+                ))
+                .toList();
     }
 }
