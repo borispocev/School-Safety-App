@@ -1,6 +1,8 @@
 package org.example.schoolsafety.report.service;
 
 import org.example.schoolsafety.common.exception.ResourceNotFoundException;
+import org.example.schoolsafety.report.ai.MlClassificationResponse;
+import org.example.schoolsafety.report.ai.MlReportClassifierService;
 import org.example.schoolsafety.report.dto.ReportImageResponse;
 import org.example.schoolsafety.report.dto.ReportRequest;
 import org.example.schoolsafety.report.dto.ReportResponse;
@@ -31,19 +33,22 @@ public class ReportService {
     private final ReportImageRepository reportImageRepository;
     private final SchoolService schoolService;
     private final UserService userService;
+    private final MlReportClassifierService mlReportClassifierService;
 
     public ReportService(ReportRepository reportRepository,
                          ReportStatusRepository reportStatusRepository,
                          ReportTypeRepository reportTypeRepository,
                          ReportImageRepository reportImageRepository,
                          SchoolService schoolService,
-                         UserService userService) {
+                         UserService userService,
+                         MlReportClassifierService mlReportClassifierService) {
         this.reportRepository = reportRepository;
         this.reportStatusRepository = reportStatusRepository;
         this.reportTypeRepository = reportTypeRepository;
         this.reportImageRepository = reportImageRepository;
         this.schoolService = schoolService;
         this.userService = userService;
+        this.mlReportClassifierService = mlReportClassifierService;
     }
 
     @Transactional(readOnly = true)
@@ -61,13 +66,19 @@ public class ReportService {
     public ReportResponse createReport(ReportRequest request) {
         Report report = new Report();
         applyRequest(report, request);
-        return toResponse(reportRepository.save(report));
+        applyMlClassification(report, request);
+
+        Report savedReport = reportRepository.save(report);
+        return toResponse(savedReport);
     }
 
     public ReportResponse updateReport(Long id, ReportRequest request) {
         Report report = getReportEntity(id);
         applyRequest(report, request);
-        return toResponse(reportRepository.save(report));
+        applyMlClassification(report, request);
+
+        Report savedReport = reportRepository.save(report);
+        return toResponse(savedReport);
     }
 
     public void deleteReport(Long id) {
@@ -82,11 +93,20 @@ public class ReportService {
 
     private void applyRequest(Report report, ReportRequest request) {
         School school = schoolService.getSchoolEntity(request.schoolId());
+
         ReportStatus status = reportStatusRepository.findById(request.reportStatusId())
-                .orElseThrow(() -> new ResourceNotFoundException("Report status not found with id " + request.reportStatusId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Report status not found with id " + request.reportStatusId()
+                ));
+
         ReportType type = reportTypeRepository.findById(request.reportTypeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Report type not found with id " + request.reportTypeId()));
-        User reporterUser = request.reporterUserId() == null ? null : userService.getUserEntity(request.reporterUserId());
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Report type not found with id " + request.reportTypeId()
+                ));
+
+        User reporterUser = request.reporterUserId() == null
+                ? null
+                : userService.getUserEntity(request.reporterUserId());
 
         report.setSchool(school);
         report.setReporterUser(reporterUser);
@@ -101,20 +121,53 @@ public class ReportService {
         report.setResolvedAt(request.resolvedAt());
     }
 
+    private void applyMlClassification(Report report, ReportRequest request) {
+        try {
+            MlClassificationResponse classification = mlReportClassifierService.classify(
+                    request.title(),
+                    request.description(),
+                    request.locationDetails()
+            );
+
+            if (classification != null) {
+                report.setAiSuggestedTypeCode(classification.predictedTypeCode());
+                report.setAiSuggestedTypeName(classification.predictedTypeName());
+                report.setAiConfidenceScore(classification.confidenceScore());
+                report.setAiSuggestedPriority(classification.suggestedPriority());
+
+                if (classification.riskKeywords() != null) {
+                    report.setAiRiskKeywords(String.join(", ", classification.riskKeywords()));
+                } else {
+                    report.setAiRiskKeywords(null);
+                }
+            }
+        } catch (Exception exception) {
+            report.setAiSuggestedTypeCode(null);
+            report.setAiSuggestedTypeName(null);
+            report.setAiConfidenceScore(null);
+            report.setAiSuggestedPriority(null);
+            report.setAiRiskKeywords(null);
+        }
+    }
+
     private ReportResponse toResponse(Report report) {
         List<ReportImageResponse> images = reportImageRepository.findByReportId(report.getId()).stream()
                 .map(this::toImageResponse)
                 .toList();
 
-        String reporterName = report.getReporterUser() == null
+        String reporterName = report.getReporterUser() == null || report.isAnonymousReport()
                 ? null
                 : report.getReporterUser().getFirstName() + " " + report.getReporterUser().getLastName();
+
+        Long reporterUserId = report.getReporterUser() == null || report.isAnonymousReport()
+                ? null
+                : report.getReporterUser().getId();
 
         return new ReportResponse(
                 report.getId(),
                 report.getSchool().getId(),
                 report.getSchool().getName(),
-                report.getReporterUser() != null ? report.getReporterUser().getId() : null,
+                reporterUserId,
                 reporterName,
                 report.getReportStatus().getId(),
                 report.getReportStatus().getName(),
@@ -127,7 +180,12 @@ public class ReportService {
                 report.getIncidentAt(),
                 report.getSubmittedAt(),
                 report.getResolvedAt(),
-                images
+                images,
+                report.getAiSuggestedTypeCode(),
+                report.getAiSuggestedTypeName(),
+                report.getAiConfidenceScore(),
+                report.getAiSuggestedPriority(),
+                report.getAiRiskKeywords()
         );
     }
 

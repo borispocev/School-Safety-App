@@ -1,0 +1,91 @@
+text,label
+Cars are driving really fast near the school crosswalk,SPEEDING
+Multiple cars are speeding near the school entrance,SPEEDING
+Drivers do not stop and drive too fast near students,SPEEDING
+Fast cars near the crosswalk in front of school,SPEEDING
+Vehicles are speeding and ignoring the school crossing,SPEEDING
+Cars are racing near the entrance of the school,SPEEDING
+The crosswalk markings are faded and students cannot cross safely,UNSAFE_CROSSWALK
+The pedestrian crossing is not visible for drivers near the school,UNSAFE_CROSSWALK
+Faded crosswalk near school entrance creates danger for students,UNSAFE_CROSSWALK
+The crosswalk is nearly faded and cars cannot see it,UNSAFE_CROSSWALK
+Cars are driving really fast near the school entrance,SPEEDING
+Multiple cars are speeding near the school zone,SPEEDING
+Drivers are driving too fast while students are crossing the road,SPEEDING
+Vehicles are speeding near the pedestrian crossing,SPEEDING
+Cars are racing near the school entrance during morning hours,SPEEDING
+Drivers do not slow down near the school,SPEEDING
+Fast cars are passing next to children near the school,SPEEDING
+Cars are ignoring the school zone and driving too fast,SPEEDING
+Vehicles are moving at high speed near the main entrance,SPEEDING
+Drivers are not stopping and are speeding near the crosswalk,SPEEDING
+Автомобили возат пребрзо пред училиштето,SPEEDING
+Возачите не ја намалуваат брзината во училишната зона,SPEEDING
+Коли возат многу брзо кај пешачкиот премин,SPEEDING
+Возилата поминуваат со голема брзина пред влезот на училиштето,SPEEDING
+Возачите не застануваат и возат пребрзо покрај учениците,SPEEDING
+Брзо возење во близина на училиштето наутро,SPEEDING
+The crosswalk is blocked by parked cars near the school,UNSAFE_CROSSWALK
+Students cannot cross safely because the crosswalk is blocked,UNSAFE_CROSSWALK
+The pedestrian crossing is unsafe for children,UNSAFE_CROSSWALK
+There is no safe crosswalk near the school entrance,UNSAFE_CROSSWALK
+The crosswalk markings are faded and students cannot cross safely,UNSAFE_CROSSWALK
+The pedestrian crossing is not visible for drivers near the school,UNSAFE_CROSSWALK
+Faded crosswalk near school entrance creates danger for students,UNSAFE_CROSSWALK
+The crosswalk is nearly faded and cars cannot see it,UNSAFE_CROSSWALK
+Students cross the road at a dangerous place because there is no clear crosswalk,UNSAFE_CROSSWALK
+The crosswalk is damaged and unsafe for students,UNSAFE_CROSSWALK
+Пешачкиот премин е избледен и не се гледа добро,UNSAFE_CROSSWALK
+Учениците не можат безбедно да ја поминат улицата,UNSAFE_CROSSWALK
+Нема јасно обележан пешачки премин пред училиштето,UNSAFE_CROSSWALK
+Пешачкиот премин е небезбеден за учениците,UNSAFE_CROSSWALK
+Автомобили го блокираат пешачкиот премин кај училиштето,UNSAFE_CROSSWALK
+Преминот е оштетен и опасен за децата,UNSAFE_CROSSWALK
+There is no school zone sign near the entrance,MISSING_SIGNAGE
+The traffic sign near the school is missing,MISSING_SIGNAGE
+The warning sign for drivers is damaged,MISSING_SIGNAGE
+Missing signage makes the school zone unsafe,MISSING_SIGNAGE
+There is no visible stop sign near the school crossing,MISSING_SIGNAGE
+Traffic signs are not visible for drivers,MISSING_SIGNAGE
+The school crossing sign is broken,MISSING_SIGNAGE
+Drivers cannot see any warning sign before the crosswalk,MISSING_SIGNAGE
+The pedestrian crossing sign is missing,MISSING_SIGNAGE
+There is no speed limit sign near the school,MISSING_SIGNAGE
+Недостасува знак за училишна зона,MISSING_SIGNAGE
+Нема сообраќаен знак пред училиштето,MISSING_SIGNAGE
+Предупредувачката сигнализација е оштетена,MISSING_SIGNAGE
+Возачите не гледаат знак за пешачки премин,MISSING_SIGNAGE
+Недостасува знак за ограничување на брзината,MISSING_SIGNAGE
+Сигнализацијата кај училиштето не е видлива,MISSING_SIGNAGE
+The street light near the school entrance is not working,POOR_LIGHTING
+The area around the school is very dark at night,POOR_LIGHTING
+There is poor lighting near the pedestrian crossing,POOR_LIGHTING
+Students cannot be seen clearly because there are no lights,POOR_LIGHTING
+The street lights are broken near the school,POOR_LIGHTING
+No lights near the crosswalk make it dangerous,POOR_LIGHTING
+The school entrance is dark in the evening,POOR_LIGHTING
+Poor lighting makes the road unsafe for students,POOR_LIGHTING
+The sidewalk near the school has no lighting,POOR_LIGHTING
+The crosswalk is not visible at night because of poor lighting,POOR_LIGHTING
+Нема доволно осветлување пред училиштето,POOR_LIGHTING
+Улицата кај училиштето е темна навечер,POOR_LIGHTING
+Светилките не работат кај пешачкиот премин,POOR_LIGHTING
+Учениците не се гледаат добро поради темнина,POOR_LIGHTING
+Лошо осветлување околу главниот влез,POOR_LIGHTING
+Нема светло на тротоарот до училиштето,POOR_LIGHTING
+There is another safety problem near the school,OTHER
+The situation near the school needs inspection,OTHER
+There is a general safety concern around the school area,OTHER
+The road near the school is unsafe and needs review,OTHER
+Students reported a problem that does not fit the other categories,OTHER
+There is an unknown risk near the school entrance,OTHER
+The school area needs safety inspection,OTHER
+There is a dangerous situation but the exact type is unclear,OTHER
+General traffic risk near the school,OTHER
+Other unsafe situation near the school building,OTHER
+Има друг безбедносен проблем во близина на училиштето,OTHER
+Потребна е проверка на оваа локација,OTHER
+Опасна ситуација која не спаѓа во другите категории,OTHER
+Проблем околу училиштето што треба да се провери,OTHER
+Непознат ризик во близина на училиштето,OTHER
+Друга небезбедна ситуација околу училиштето,OTHER

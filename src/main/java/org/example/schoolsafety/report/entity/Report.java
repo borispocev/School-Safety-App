@@ -60,6 +60,21 @@ public class Report extends AuditableEntity {
     @Column(name = "resolved_at")
     private LocalDateTime resolvedAt;
 
+    @Column(name = "ai_suggested_type_code", length = 50)
+    private String aiSuggestedTypeCode;
+
+    @Column(name = "ai_suggested_type_name", length = 100)
+    private String aiSuggestedTypeName;
+
+    @Column(name = "ai_confidence_score")
+    private Double aiConfidenceScore;
+
+    @Column(name = "ai_suggested_priority", length = 30)
+    private String aiSuggestedPriority;
+
+    @Column(name = "ai_risk_keywords", length = 1000)
+    private String aiRiskKeywords;
+
     public Long getId() {
         return id;
     }
@@ -154,5 +169,44 @@ public class Report extends AuditableEntity {
 
     public void setResolvedAt(LocalDateTime resolvedAt) {
         this.resolvedAt = resolvedAt;
+    }
+
+    public String getAiSuggestedTypeCode() {
+        return aiSuggestedTypeCode;
+    }
+
+    public void setAiSuggestedTypeCode(String aiSuggestedTypeCode) {
+        this.aiSuggestedTypeCode = aiSuggestedTypeCode;
+    }
+
+    public String getAiSuggestedTypeName() {
+        return aiSuggestedTypeName;
+    }
+
+    public void setAiSuggestedTypeName(String aiSuggestedTypeName) {
+        this.aiSuggestedTypeName = aiSuggestedTypeName;
+    }
+
+    public Double getAiConfidenceScore() {
+        return aiConfidenceScore;
+    }
+
+    public void setAiConfidenceScore(Double aiConfidenceScore) {
+        this.aiConfidenceScore = aiConfidenceScore;
+    }
+    public String getAiSuggestedPriority() {
+        return aiSuggestedPriority;
+    }
+
+    public void setAiSuggestedPriority(String aiSuggestedPriority) {
+        this.aiSuggestedPriority = aiSuggestedPriority;
+    }
+
+    public String getAiRiskKeywords() {
+        return aiRiskKeywords;
+    }
+
+    public void setAiRiskKeywords(String aiRiskKeywords) {
+        this.aiRiskKeywords = aiRiskKeywords;
     }
 }

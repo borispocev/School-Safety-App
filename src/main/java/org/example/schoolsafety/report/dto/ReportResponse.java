@@ -20,6 +20,11 @@ public record ReportResponse(
         LocalDateTime incidentAt,
         LocalDateTime submittedAt,
         LocalDateTime resolvedAt,
-        List<ReportImageResponse> images
+        List<ReportImageResponse> images,
+        String aiSuggestedTypeCode,
+        String aiSuggestedTypeName,
+        Double aiConfidenceScore,
+        String aiSuggestedPriority,
+        String aiRiskKeywords
 ) {
 }
