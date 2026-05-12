@@ -41,7 +41,7 @@ DB_PASSWORD=your_mysql_password ./mvnw spring-boot:run
 
 On first startup, Hibernate auto-creates the schema and `data.sql` seeds default roles, report types, statuses, and all 23 Skopje secondary schools.
 
-The API is available at `http://localhost:8080`.
+The API is available at `http://localhost:8081`.
 
 ### 3. Run the frontend
 
@@ -69,24 +69,108 @@ New accounts registered via the signup page receive the `USER` role and can late
 - **User:** submit safety reports, apply as student (link account to a school), view reports
 - **Admin:** manage users, schools, and reports; update report statuses
 
+## Run the ML Service
+
+The ML service is used for:
+
+- **automatic** report classification
+- **suggested** report priority
+- **risky keyword** detection
+
+Open a terminal in the project root and run:
+```bash
+cd ml-service
+python -m venv venv
+```
+
+Activate the virtual environment.
+
+PowerShell:
+
+```bash
+.\venv\Scripts\activate
+```
+
+bash / Git Bash:
+
+```bash
+source venv/bin/activate
+```
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Prepare the training dataset:
+
+```bash
+python prepare_dataset.py
+```
+
+Train the ML model:
+
+```bash
+python train_model.py
+```
+
+Start the ML service:
+
+```bash
+uvicorn main:app --reload --port 8001
+```
+
+The ML service is available at:
+
+http://localhost:8001
+
+Health check:
+
+http://localhost:8001/health
+
+FastAPI documentation:
+
+http://localhost:8001/docs
+
+The Spring Boot backend calls this service when a new report is created or updated.
+
 ## Project structure
 
 ```
 SchoolSafety/
 ├── src/main/java/org/example/schoolsafety/
 │   ├── auth/          # Registration, login, apply-student endpoints
-│   ├── config/        # Spring Security configuration
-│   ├── report/        # Report entity, service, controller
+│   ├── common/        # Shared exceptions, API error responses, base entities
+│   ├── config/        # Spring Security and app configuration
+│   ├── report/        # Report entity, service, controller, AI integration
+│   │   ├── ai/        # Java DTOs and service for calling the ML service
+│   │   ├── controller/
+│   │   ├── dto/
+│   │   ├── entity/
+│   │   ├── repository/
+│   │   └── service/
+│   ├── role/          # Role entity, repository, service, controller
 │   ├── school/        # School entity, service, controller
 │   └── user/          # User entity, service, controller
 ├── src/main/resources/
-│   ├── application.properties   # Config (credentials via env vars)
-│   ├── schema.sql               # DDL — runs on fresh database
-│   └── data.sql                 # Seed data — idempotent, safe to re-run
+│   ├── application.properties   # Backend configuration
+│   ├── schema.sql               # Optional database schema
+│   └── data.sql                 # Seed data
+├── ml-service/                  # Python FastAPI ML service
+│   ├── data/
+│   │   ├── nyc_311_sample.csv
+│   │   ├── reports_training_data.csv
+│   │   └── custom_school_safety_examples.csv
+│   ├── model/
+│   │   └── report_classifier.joblib
+│   ├── main.py                  # FastAPI service
+│   ├── prepare_dataset.py       # Dataset preprocessing
+│   ├── train_model.py           # Model training script
+│   └── requirements.txt         # Python dependencies
 └── frontend/                    # React + Vite frontend
     └── src/
-        ├── api/           # Axios API clients
-        ├── components/    # Navbar, Footer, ProtectedRoute
-        ├── context/       # AuthContext (login state)
-        └── pages/         # Page components (login, signup, reports, admin)
+        ├── api/                 # Axios API clients
+        ├── components/          # Navbar, Footer, ProtectedRoute
+        ├── context/             # AuthContext
+        └── pages/               # Login, signup, reports, admin, map, statistics pages
 ```
